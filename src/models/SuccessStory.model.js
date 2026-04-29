@@ -29,7 +29,13 @@ const SuccessStorySchema = new mongoose.Schema({
   testimonial: {
     type: String,
     maxlength: 10000
-  }
+  },
+  post: { type: String },
+  photo: { type: String },
+  rating: { type: Number, min: 1, max: 5 },
+  featured: { type: Boolean, default: false },
+  published: { type: Boolean, default: true },
+  publishedAt: { type: Date, default: Date.now }
 },{ timestamps: true });
 
 module.exports = mongoose.model('SuccessStory', SuccessStorySchema);

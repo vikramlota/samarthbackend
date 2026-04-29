@@ -97,9 +97,11 @@ app.use(cookieParser())
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
+  res.json({
+    status: 'ok',
+    uptime: Math.floor(process.uptime()),
     timestamp: new Date().toISOString(),
+    version: '1.0.0',
     database: dbConnected ? 'connected' : 'not_connected',
     cors: 'enabled',
     environment: {
@@ -140,8 +142,19 @@ app.use('/api/courses', require('./routes/course.routes.js'));
 app.use('/api/results', require('./routes/result.routes.js'));
 app.use('/api/notifications', require('./routes/update.routes.js'));
 app.use('/api/leads', require('./routes/lead.routes.js'));
+app.use('/api/lead', require('./routes/lead.routes.js'));  // spec alias
 app.use('/api/current-affairs', require('./routes/currentaffairs.routes.js'));
-app.use("/api/demo-requests", demoRoutes);
+app.use('/api/demo-requests', demoRoutes);
+app.use('/api/stats', require('./routes/stats.routes.js'));
+app.use('/api/testimonials', require('./routes/testimonials.routes.js'));
+app.use('/api/selections', require('./routes/selections.routes.js'));
+app.use('/api/featured-exam', require('./routes/featuredExam.routes.js'));
+app.use('/api/landing-pages', require('./routes/landingPage.routes.js'));
+app.use('/api/faculty', require('./routes/faculty.routes.js'));
+app.use('/api/batches', require('./routes/batch.routes.js'));
+app.use('/api/about', require('./routes/about.routes.js'));
+app.use('/api/media-coverage', require('./routes/mediaCoverage.routes.js'));
+app.use('/api/inquiries', require('./routes/inquiry.routes.js'));
 // Global error handler - catches any unhandled errors
 app.use((err, req, res, next) => {
   console.error('🔴 ERROR:', err);

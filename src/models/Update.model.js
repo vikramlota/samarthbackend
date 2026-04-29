@@ -47,7 +47,10 @@ const UpdateSchema = new mongoose.Schema({
   imageUrl: {
     type: String,
     required: false
-  }
+  },
+  href: { type: String },
+  active: { type: Boolean, default: true },
+  expiresAt: { type: Date }
 },{ timestamps: true });
 
 // Pre-save hook to auto-generate slug if not provided

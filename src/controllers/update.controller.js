@@ -11,8 +11,38 @@ const isCloudinaryConfigured = () => {
 // --- NOTIFICATIONS / UPDATES ---
 const getUpdates = async (req, res) => {
   try {
-    const updates = await Update.find({}).sort({ datePosted: -1 });
-    // Ensure image URLs are HTTPS
+    const filter = {};
+    const isActiveQuery = req.query.active === 'true';
+
+    if (isActiveQuery) {
+      const now = new Date();
+      filter.active = true;
+      filter.$or = [
+        { expiresAt: { $exists: false } },
+        { expiresAt: null },
+        { expiresAt: { $gte: now } }
+      ];
+    }
+
+    const limit = req.query.limit ? Math.min(parseInt(req.query.limit), 50) : undefined;
+    let query = Update.find(filter).sort({ datePosted: -1 });
+    if (limit) query = query.limit(limit);
+
+    const updates = await query;
+
+    // When called with ?active=true return the new standardised format
+    if (isActiveQuery) {
+      const data = updates.map(item => ({
+        _id: item._id,
+        text: item.title,
+        href: item.href || item.linkUrl || null,
+        active: item.active !== false,
+        expiresAt: item.expiresAt || null
+      }));
+      return res.json({ success: true, data });
+    }
+
+    // Default: backward-compatible array response for admin panel
     const sanitizedUpdates = updates.map(item => ({
       ...item.toObject(),
       imageUrl: item.imageUrl ? item.imageUrl.replace(/^http:/, 'https:') : item.imageUrl

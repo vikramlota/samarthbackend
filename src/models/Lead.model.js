@@ -24,6 +24,11 @@ const LeadSchema = new mongoose.Schema({
     enum: ['New', 'Contacted', 'Converted', 'Closed'],
     default: 'New'
   },
+  source: { type: String, default: 'unknown' },
+  message: { type: String },
+  preferredTime: { type: String },
+  ip: { type: String },
+  userAgent: { type: String },
   submittedAt: {
     type: Date,
     default: Date.now

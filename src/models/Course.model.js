@@ -53,6 +53,12 @@ const CourseSchema = new mongoose.Schema({
     type: String,
     default: null 
   },
+  shortDescription: { type: String },
+  studentCount: { type: String },
+  fee: { type: Number },
+  feeDisplay: { type: String },
+  featured: { type: Boolean, default: false },
+  displayOrder: { type: Number, default: 0 },
   isActive: {
     type: Boolean,
     default: true

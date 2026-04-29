@@ -9,10 +9,34 @@ const { notifyGoogle } = require('../utils/googleIndexing.js');
 const getCourses = async (req, res) => {
   try {
     console.log('🎓 getCourses called - fetching active courses...');
-    // Sort by latest created
-    const courses = await Course.find({ isActive: true }).sort({ createdAt: -1 });
+    const courses = await Course.find({ isActive: true }).sort({ displayOrder: 1, createdAt: -1 });
     console.log(`✅ Found ${courses.length} courses`);
-    res.json(courses);
+
+    const data = courses.map(c => ({
+      _id: c._id,
+      slug: c.slug,
+      title: c.title,
+      shortDescription: c.shortDescription || null,
+      icon: c.icon || null,
+      duration: c.duration || null,
+      studentCount: c.studentCount || null,
+      fee: c.fee || null,
+      feeDisplay: c.feeDisplay || null,
+      featured: c.featured || false,
+      displayOrder: c.displayOrder || 0,
+      active: c.isActive,
+      // Keep full fields available for detail pages
+      description: c.description,
+      image: c.image,
+      category: c.category,
+      features: c.features,
+      badgeText: c.badgeText,
+      colorTheme: c.colorTheme,
+      link: c.link,
+      youtubeLink: c.youtubeLink
+    }));
+
+    res.json({ success: true, data });
   } catch (error) {
     console.error('❌ getCourses error:', error);
     res.status(500).json({ message: error.message, error: error.toString() });

@@ -9,7 +9,12 @@
   "scripts": {
     "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js",
     "start": "node src/index.js",
-    "create-indexes": "node -r dotenv/config src/utils/createIndexes.js"
+    "create-indexes": "node -r dotenv/config src/utils/createIndexes.js",
+    "seed:landing-pages": "node -r dotenv/config src/seed/landingPagesSeed.js",
+    "seed:landing-pages:fresh": "node -r dotenv/config src/seed/landingPagesSeed.js --clear",
+    "seed:about": "node -r dotenv/config src/seed/aboutPageSeed.js",
+    "seed:media-coverage": "node -r dotenv/config src/seed/mediaCoverageSeed.js",
+    "seed:media-coverage:fresh": "node -r dotenv/config src/seed/mediaCoverageSeed.js --clear"
   },
   "keywords": [],
   "dependencies": {
@@ -20,6 +25,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "googleapis": "^171.4.0",
+    "joi": "^18.1.2",
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.0.0",
     "mongoose": "^9.1.5",
