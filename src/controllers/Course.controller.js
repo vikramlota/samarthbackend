@@ -9,7 +9,7 @@ const { notifyGoogle } = require('../utils/googleIndexing.js');
 const getCourses = async (req, res) => {
   try {
     console.log('🎓 getCourses called - fetching active courses...');
-    const courses = await Course.find({ isActive: true }).sort({ displayOrder: 1, createdAt: -1 });
+    const courses = await Course.find().sort({ displayOrder: 1, createdAt: -1 });
     console.log(`✅ Found ${courses.length} courses`);
 
     const data = courses.map(c => ({

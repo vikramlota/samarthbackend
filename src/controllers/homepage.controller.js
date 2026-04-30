@@ -35,7 +35,7 @@ const getHomepageData = async (req, res) => {
     // Execute all queries in parallel for better performance
     const [courses, updates, successStories, currentAffairs, courseCount, updateCount] = await Promise.all([
       // Fetch featured active courses (limited to 8)
-      Course.find({ isActive: true })
+      Course.find({})
         .select('title slug image description category features badgeText -_id')
         .limit(8)
         .sort({ createdAt: -1 })
@@ -63,7 +63,7 @@ const getHomepageData = async (req, res) => {
         .lean(),
 
       // Count total active courses
-      Course.countDocuments({ isActive: true }),
+      Course.countDocuments(),
       
       // Count total updates
       Update.countDocuments()

@@ -17,7 +17,6 @@ const getFeaturedExam = async (req, res) => {
 
     const now = new Date();
     const exam = await FeaturedExam.findOne({
-      isActive: true,
       $or: [
         { validUntil: { $exists: false } },
         { validUntil: null },
