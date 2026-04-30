@@ -110,17 +110,31 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Debug endpoint
-app.get('/api/debug', (req, res) => {
+// Diagnostic endpoint — shows connected DB and collection counts
+app.get('/api/debug', async (req, res) => {
+  const mongoose = require('mongoose');
+  const db = mongoose.connection;
+
+  let collections = {};
+  try {
+    if (db.readyState === 1) {
+      const colls = await db.db.listCollections().toArray();
+      for (const col of colls) {
+        collections[col.name] = await db.db.collection(col.name).countDocuments();
+      }
+    }
+  } catch (e) {
+    collections = { error: e.message };
+  }
+
   res.json({
     status: 'ok',
-    origin: req.get('origin'),
-    requestHeaders: {
-      'user-agent': req.get('user-agent'),
-      'content-type': req.get('content-type')
-    },
-    cors: 'enabled',
-    corsPolicy: allowedOrigins
+    database: {
+      name: db.name,
+      host: db.host,
+      readyState: db.readyState, // 1 = connected
+      collections
+    }
   });
 });
 
