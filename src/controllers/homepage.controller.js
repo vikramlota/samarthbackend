@@ -50,14 +50,14 @@ const getHomepageData = async (req, res) => {
       
       // Fetch recent success stories (limited to 6)
       SuccessStory.find({})
-        .select('name imageUrl year position -_id')
+        .select('studentName imageUrl photo year post rank examName -_id')
         .limit(6)
         .sort({ year: -1 })
         .lean(),
-      
+
       // Fetch current affairs highlights (limited to 4)
       CurrentAffair.find({})
-        .select('title slug image description createdAt -_id')
+        .select('headline slug imageUrl contentBody createdAt -_id')
         .limit(4)
         .sort({ createdAt: -1 })
         .lean(),

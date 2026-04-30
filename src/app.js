@@ -21,8 +21,7 @@ app.use((req, res, next) => {
     'http://localhost:3000',
     'https://www.thesamarthacademy.in',
     'https://thesamarthacademy.in',
-    'https://gyann-samarth-acadamy2.vercel.app',
-    'https://gyann-samarth-acadamy-j861.vercel.app'
+  
   ];
   
   // Always set these headers
@@ -58,7 +57,7 @@ app.use(cors(corsOptions));
 
 // Middleware to ensure database connection for all data requests
 let dbConnected = false;
-let dbConnectionInProgress = false;
+let dbConnectionPromise = null;
 
 app.use(async (req, res, next) => {
   // Skip DB check for health check or static files
@@ -66,22 +65,21 @@ app.use(async (req, res, next) => {
     return next();
   }
 
-  // For ALL API requests (GET, POST, PUT, DELETE), ensure database is connected
-  if (!dbConnected && !dbConnectionInProgress) {
-    dbConnectionInProgress = true;
-    try {
+  if (!dbConnected) {
+    if (!dbConnectionPromise) {
       console.log('🔄 Connecting to database on first API request...');
-      await connectDB();
-      dbConnected = true;
-      console.log('✅ Database connected');
+      dbConnectionPromise = connectDB()
+        .then(() => { dbConnected = true; console.log('✅ Database connected'); })
+        .catch((err) => { dbConnectionPromise = null; throw err; });
+    }
+    try {
+      await dbConnectionPromise;
     } catch (error) {
       console.error('❌ Database connection failed:', error.message);
-      return res.status(503).json({ 
+      return res.status(503).json({
         message: 'Database service temporarily unavailable',
-        error: error.message 
+        error: error.message
       });
-    } finally {
-      dbConnectionInProgress = false;
     }
   }
 

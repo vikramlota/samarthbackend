@@ -8,7 +8,7 @@ const getTestimonials = async (req, res) => {
     const limit = Math.min(parseInt(req.query.limit) || 6, 50);
     const exam = req.query.exam;
 
-    const filter = { published: true };
+    const filter = { $or: [{ published: true }, { published: { $exists: false } }] };
     if (req.query.featured === 'true') filter.featured = true;
     if (exam) filter.examName = new RegExp(exam, 'i');
 
