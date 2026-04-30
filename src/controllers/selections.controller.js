@@ -7,11 +7,11 @@ const { uploadOnCloudinary } = require('../utils/cloudinary.js');
 const getSelections = async (req, res) => {
   try {
     const limit = Math.min(parseInt(req.query.limit) || 8, 100);
-    const filter = { active: true };
+    const filter = { active: { $ne: false } };
 
     if (req.query.featured === 'true') filter.featured = true;
     if (req.query.exam) filter.examTag = req.query.exam.toLowerCase();
-    if (req.query.year)  filter.year = parseInt(req.query.year);
+    if (req.query.year) filter.year = parseInt(req.query.year);
 
     const [data, total] = await Promise.all([
       Selection.find(filter)

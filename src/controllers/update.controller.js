@@ -16,7 +16,7 @@ const getUpdates = async (req, res) => {
 
     if (isActiveQuery) {
       const now = new Date();
-      filter.active = true;
+      filter.active = { $ne: false };
       filter.$or = [
         { expiresAt: { $exists: false } },
         { expiresAt: null },

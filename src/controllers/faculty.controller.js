@@ -7,7 +7,7 @@ const { uploadOnCloudinary } = require('../utils/cloudinary.js');
 const getFaculty = async (req, res) => {
   try {
     const limit = Math.min(parseInt(req.query.limit) || 50, 100);
-    const filter = { active: true };
+    const filter = { active: { $ne: false } };
     if (req.query.exam) filter.examTags = req.query.exam.toLowerCase();
     if (req.query.featured === 'true') filter.featured = true;
 
@@ -31,8 +31,8 @@ const getFacultyById = async (req, res) => {
     const mongoose = require('mongoose');
 
     const filter = mongoose.Types.ObjectId.isValid(idOrSlug)
-      ? { _id: idOrSlug, active: true }
-      : { slug: idOrSlug.toLowerCase(), active: true };
+      ? { _id: idOrSlug, active: { $ne: false } }
+      : { slug: idOrSlug.toLowerCase(), active: { $ne: false } };
 
     const member = await Faculty.findOne(filter);
     if (!member) return res.status(404).json({ success: false, error: 'Faculty not found' });

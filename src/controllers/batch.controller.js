@@ -5,12 +5,12 @@ const Batch = require('../models/Batch.model.js');
 // GET /api/batches?course=ssc-cgl&active=true
 const getBatches = async (req, res) => {
   try {
-    const { course, active = 'true' } = req.query;
-    const filter = {};
+    const { course } = req.query;
+    const filter = { active: { $ne: false } };
 
     if (course) filter.courseSlug = course.toLowerCase();
-    if (active === 'true') {
-      filter.active = true;
+    // Only show upcoming batches when caller explicitly requests it
+    if (req.query.upcoming === 'true') {
       filter.startDate = { $gte: new Date() };
     }
 

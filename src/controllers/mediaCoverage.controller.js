@@ -7,7 +7,7 @@ const { uploadOnCloudinary } = require('../utils/cloudinary.js');
 const getMediaCoverage = async (req, res) => {
   try {
     const limit = Math.min(parseInt(req.query.limit) || 20, 100);
-    const filter = { active: true };
+    const filter = { active: { $ne: false } };
     if (req.query.featured === 'true') filter.featured = true;
 
     const items = await MediaCoverage.find(filter)
