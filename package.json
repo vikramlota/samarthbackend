@@ -14,7 +14,11 @@
     "seed:landing-pages:fresh": "node -r dotenv/config src/seed/landingPagesSeed.js --clear",
     "seed:about": "node -r dotenv/config src/seed/aboutPageSeed.js",
     "seed:media-coverage": "node -r dotenv/config src/seed/mediaCoverageSeed.js",
-    "seed:media-coverage:fresh": "node -r dotenv/config src/seed/mediaCoverageSeed.js --clear"
+    "seed:media-coverage:fresh": "node -r dotenv/config src/seed/mediaCoverageSeed.js --clear",
+    "seed:categories": "node -r dotenv/config src/seed/categoriesSeed.js",
+    "seed:categories:fresh": "node -r dotenv/config src/seed/categoriesSeed.js --clear",
+    "seed:blog": "node -r dotenv/config src/seed/blogPostsSeed.js",
+    "seed:blog:fresh": "node -r dotenv/config src/seed/blogPostsSeed.js --clear"
   },
   "keywords": [],
   "dependencies": {
@@ -31,6 +35,7 @@
     "mongoose": "^9.1.5",
     "mongoose-aggregate-paginate-v2": "^1.1.4",
     "multer": "^2.0.2",
+    "sanitize-html": "^2.17.3",
     "serverless-http": "^4.0.0"
   },
   "devDependencies": {

@@ -167,6 +167,8 @@ app.use('/api/batches', require('./routes/batch.routes.js'));
 app.use('/api/about', require('./routes/about.routes.js'));
 app.use('/api/media-coverage', require('./routes/mediaCoverage.routes.js'));
 app.use('/api/inquiries', require('./routes/inquiry.routes.js'));
+app.use('/api/blog/posts', require('./routes/blogPosts.routes.js'));
+app.use('/api/blog/categories', require('./routes/categories.routes.js'));
 // Global error handler - catches any unhandled errors
 app.use((err, req, res, next) => {
   console.error('🔴 ERROR:', err);
