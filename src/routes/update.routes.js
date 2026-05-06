@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getUpdates, getUpdateById, createUpdate, updateUpdate, deleteUpdate, getCurrentAffairs, createCurrentAffair } = require('../controllers/update.controller.js');
-const { protect } = require('../middlewares/auth.middleware.js');
+const { protect } = require('../middleware/auth');
 const { upload, handleMullerError } = require('../middlewares/upload.middleware.js');
 
 // Notification Routes

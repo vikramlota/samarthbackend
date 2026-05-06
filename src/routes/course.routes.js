@@ -10,7 +10,7 @@ const {
     updateCourse 
 } = require('../controllers/Course.controller.js');
 
-const { protect } = require('../middlewares/auth.middleware.js');
+const { protect } = require('../middleware/auth');
 const { upload } = require('../middlewares/upload.middleware.js');
 
 // Public: Get all courses

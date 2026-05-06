@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { createDemoRequest, getDemoRequests, updateDemoStatus, deleteDemoRequest } = require('../controllers/demo.controller.js');
-const { protect } = require('../middlewares/auth.middleware.js');
+const { protect } = require('../middleware/auth');
 
 // Public route to submit
 router.route('/').post(createDemoRequest);

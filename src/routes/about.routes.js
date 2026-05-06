@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getAbout, updateAbout, updateSection, uploadPhoto } = require('../controllers/about.controller.js');
-const { protect } = require('../middlewares/auth.middleware.js');
+const { protect } = require('../middleware/auth');
 const { upload } = require('../middlewares/upload.middleware.js');
 const { publicReadLimiter } = require('../middlewares/rateLimiter.middleware.js');
 

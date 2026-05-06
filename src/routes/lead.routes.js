@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { submitLead, getLeads } = require('../controllers/Leadcontroller.js');
-const { protect } = require('../middlewares/auth.middleware.js');
+const { protect } = require('../middleware/auth');
 
 router.post('/', submitLead); // Public
 router.get('/', protect, getLeads); // Admin only

@@ -18,7 +18,8 @@
     "seed:categories": "node -r dotenv/config src/seed/categoriesSeed.js",
     "seed:categories:fresh": "node -r dotenv/config src/seed/categoriesSeed.js --clear",
     "seed:blog": "node -r dotenv/config src/seed/blogPostsSeed.js",
-    "seed:blog:fresh": "node -r dotenv/config src/seed/blogPostsSeed.js --clear"
+    "seed:blog:fresh": "node -r dotenv/config src/seed/blogPostsSeed.js --clear",
+    "seed:admin-user": "node -r dotenv/config seed/userSeed.js"
   },
   "keywords": [],
   "dependencies": {
@@ -28,6 +29,7 @@
     "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.5.1",
     "googleapis": "^171.4.0",
     "joi": "^18.1.2",
     "jsonwebtoken": "^9.0.3",

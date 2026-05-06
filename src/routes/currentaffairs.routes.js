@@ -8,7 +8,7 @@ const {
   updateCurrentAffair // <--- Import this
 } = require('../controllers/currentaffairs.controllers.js');
 
-const { protect } = require('../middlewares/auth.middleware.js');
+const { protect, requireAdmin } = require('../middleware/auth');
 const { upload, handleMullerError } = require('../middlewares/upload.middleware.js');
 
 // Logging middleware for debugging
@@ -25,7 +25,7 @@ router.put('/:id', (req, res, next) => {
 router.get('/', getCurrentAffairs);
 router.get('/:slug', getCurrentAffairBySlug); // <-- Change this line to use slug instead of ID
 router.post('/', protect, upload.single('image'), handleMullerError, createCurrentAffair);
-router.delete('/:id', protect, deleteCurrentAffair);
+router.delete('/:id', requireAdmin, deleteCurrentAffair);
 
 // ADD THIS LINE:
 router.put('/:id', protect, upload.single('image'), handleMullerError, updateCurrentAffair);

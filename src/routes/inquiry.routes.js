@@ -8,7 +8,7 @@ const {
   adminUpdate,
   adminAddNote,
 } = require('../controllers/inquiry.controller.js');
-const { protect } = require('../middlewares/auth.middleware.js');
+const { protect } = require('../middleware/auth');
 const { createRateLimiter } = require('../middlewares/rateLimiter.middleware.js');
 
 // Strict rate limit for the public submission endpoint

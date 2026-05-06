@@ -10,7 +10,7 @@ const {
   adminSoftDelete,
   adminDuplicate,
 } = require('../controllers/landingPage.controller.js');
-const { protect } = require('../middlewares/auth.middleware.js');
+const { protect, requireAdmin } = require('../middleware/auth');
 const { validateLandingPage } = require('../middlewares/validation.middleware.js');
 const { publicReadLimiter } = require('../middlewares/rateLimiter.middleware.js');
 
@@ -35,7 +35,7 @@ router.post('/admin', protect, validateLandingPage, adminCreate);
 router.put('/admin/:id', protect, validateLandingPage, adminUpdate);
 
 // DELETE /api/landing-pages/admin/:id  (soft delete)
-router.delete('/admin/:id', protect, adminSoftDelete);
+router.delete('/admin/:id', requireAdmin, adminSoftDelete);
 
 // POST /api/landing-pages/admin/:id/duplicate
 router.post('/admin/:id/duplicate', protect, adminDuplicate);

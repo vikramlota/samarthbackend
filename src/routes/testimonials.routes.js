@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getTestimonials, createTestimonial, updateTestimonial, deleteTestimonial } = require('../controllers/testimonials.controller.js');
-const { protect } = require('../middlewares/auth.middleware.js');
+const { protect } = require('../middleware/auth');
 const { upload } = require('../middlewares/upload.middleware.js');
 
 router.route('/')
