@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const BlogPost = require('../models/BlogPost.model');
 const Category = require('../models/Category.model');
-const { protect } = require('../middlewares/auth.middleware');
+const { protect } = require('../middleware/auth');
 
 // ============ ADMIN ROUTES (declared before /:slug to avoid param collision) ============
 
