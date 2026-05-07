@@ -83,8 +83,8 @@ router.post('/admin', protect, async (req, res) => {
   try {
     const data = {
       ...req.body,
-      createdBy: req.admin._id,
-      updatedBy: req.admin._id,
+      createdBy: req.user._id,
+      updatedBy: req.user._id,
     };
 
     if (!data.title?.trim()) {
@@ -120,7 +120,7 @@ router.post('/admin', protect, async (req, res) => {
 
 router.put('/admin/:id', protect, async (req, res) => {
   try {
-    const updates = { ...req.body, updatedBy: req.admin._id };
+    const updates = { ...req.body, updatedBy: req.user._id };
 
     if (updates.categories) {
       if (updates.categories.length === 0) {
@@ -153,7 +153,7 @@ router.delete('/admin/:id', protect, async (req, res) => {
   try {
     const post = await BlogPost.findByIdAndUpdate(
       req.params.id,
-      { active: false, updatedBy: req.admin._id },
+      { active: false, updatedBy: req.user._id },
       { new: true }
     );
 
@@ -170,7 +170,7 @@ router.patch('/admin/:id/featured', protect, async (req, res) => {
     if (!post) return res.status(404).json({ success: false, error: 'Not found' });
 
     post.featured = !post.featured;
-    post.updatedBy = req.admin._id;
+    post.updatedBy = req.user._id;
     await post.save();
 
     res.json({ success: true, data: { _id: post._id, featured: post.featured } });
