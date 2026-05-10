@@ -76,6 +76,10 @@ const CourseSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
+CourseSchema.index({ isActive: 1, featured: -1 });
+CourseSchema.index({ isActive: 1, category: 1 });
+CourseSchema.index({ isActive: 1, displayOrder: 1 });
+
 // Pre-save hook to auto-generate slug if not provided
 CourseSchema.pre('save', async function() {
   if (this.title && !this.slug) {

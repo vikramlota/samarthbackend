@@ -50,33 +50,31 @@ const createCourse = async (req, res) => {
   let tempFilePath = null;
   
   try {
-    if (!req.file) {
-        return res.status(400).json({ message: "❌ Image file is missing in the request." });
-    }
-
-    // UPLOAD LOGIC
-    let imageUrl = "";
-    try {
-        if (req.file.buffer) {
-            tempFilePath = path.join('/tmp', `${Date.now()}-${req.file.originalname}`);
-            fs.writeFileSync(tempFilePath, req.file.buffer);
-        } else {
-            tempFilePath = req.file.path;
-        }
-        
-        const cloudinaryResponse = await uploadOnCloudinary(tempFilePath);
-        
-        if (!cloudinaryResponse?.secure_url) {
-             throw new Error("Cloudinary returned no URL");
-        }
-        
-        imageUrl = cloudinaryResponse.secure_url;
-    } catch (uploadError) {
-        throw new Error(`Image upload failed: ${uploadError.message}`);
-    } finally {
-        if (tempFilePath && fs.existsSync(tempFilePath)) {
-            try { fs.unlinkSync(tempFilePath); } catch (e) { console.error("Cleanup error:", e); }
-        }
+    // Image is now optional - only upload if provided
+    let imageUrl = null;
+    if (req.file) {
+      try {
+          if (req.file.buffer) {
+              tempFilePath = path.join('/tmp', `${Date.now()}-${req.file.originalname}`);
+              fs.writeFileSync(tempFilePath, req.file.buffer);
+          } else {
+              tempFilePath = req.file.path;
+          }
+          
+          const cloudinaryResponse = await uploadOnCloudinary(tempFilePath);
+          
+          if (!cloudinaryResponse?.secure_url) {
+               throw new Error("Cloudinary returned no URL");
+          }
+          
+          imageUrl = cloudinaryResponse.secure_url;
+      } catch (uploadError) {
+          throw new Error(`Image upload failed: ${uploadError.message}`);
+      } finally {
+          if (tempFilePath && fs.existsSync(tempFilePath)) {
+              try { fs.unlinkSync(tempFilePath); } catch (e) { console.error("Cleanup error:", e); }
+          }
+      }
     }
 
     // PARSE FEATURES
@@ -91,6 +89,27 @@ const createCourse = async (req, res) => {
     }
     features = features.filter(f => f);
 
+    // PARSE COLOR THEME
+    let colorTheme = {};
+    if (req.body['colorTheme[from]']) {
+        colorTheme = {
+            from: req.body['colorTheme[from]'],
+            to: req.body['colorTheme[to]'],
+            text: req.body['colorTheme[text]'],
+            border: req.body['colorTheme[border]']
+        };
+    } else if (req.body.colorTheme && typeof req.body.colorTheme === 'object') {
+        colorTheme = req.body.colorTheme;
+    } else {
+        // Default theme
+        colorTheme = {
+            from: '#ef4444',
+            to: '#b91c1c', 
+            text: '#ffffff',
+            border: '#ef4444'
+        };
+    }
+
     // MANUAL CONSTRUCTION (Slug comes directly from req.body now)
     const courseData = {
         title: req.body.title,
@@ -100,7 +119,7 @@ const createCourse = async (req, res) => {
         badgeText: req.body.badgeText,
         link: req.body.link,
         youtubeLink: req.body.youtubeLink,
-        colorTheme: req.body.colorTheme, 
+        colorTheme: colorTheme, 
         features: features,
         image: imageUrl, 
     };
@@ -177,6 +196,21 @@ const updateCourse = async (req, res) => {
         
         if (features.length > 0) {
             body.features = features.filter(f => f !== undefined && f !== null);
+        }
+
+        // Handle Color Theme
+        if (body['colorTheme[from]']) {
+            body.colorTheme = {
+                from: body['colorTheme[from]'],
+                to: body['colorTheme[to]'],
+                text: body['colorTheme[text]'],
+                border: body['colorTheme[border]']
+            };
+            // Remove the bracket notation keys
+            delete body['colorTheme[from]'];
+            delete body['colorTheme[to]'];
+            delete body['colorTheme[text]'];
+            delete body['colorTheme[border]'];
         }
 
         const updatedCourse = await Course.findByIdAndUpdate(

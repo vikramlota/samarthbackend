@@ -6,6 +6,7 @@ const app = express()
 const sitemapRoutes = require('./routes/sitemap.routes.js');
 const homepageRoutes = require('./routes/homepage.routes.js');
 const connectDB = require('./db/index.js');
+const cache = require('./middleware/cache.js');
 
 // ⚡ CRITICAL: Set CORS headers FIRST, before any other middleware
 // This ensures CORS headers are sent even if routes fail
@@ -146,31 +147,38 @@ app.get('/api/test', (req, res) => {
   });
 });
 
+// Web Vitals logging endpoint
+app.post('/api/metrics/web-vital', (req, res) => {
+  const { name, value, rating, path } = req.body;
+  console.log(`[WebVital] ${name} ${rating} ${Math.round(value)} — ${path}`);
+  res.status(204).end();
+});
+
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/upload', require('./routes/upload'));
 app.use('/api', sitemapRoutes);
-app.use('/api/homepage', homepageRoutes);
+app.use('/api/homepage', cache, homepageRoutes);
 app.use('/api/admin', require('./routes/Admin.routes.js'));
-app.use('/api/courses', require('./routes/course.routes.js'));
-app.use('/api/results', require('./routes/result.routes.js'));
-app.use('/api/notifications', require('./routes/update.routes.js'));
+app.use('/api/courses', cache, require('./routes/course.routes.js'));
+app.use('/api/results', cache, require('./routes/result.routes.js'));
+app.use('/api/notifications', cache, require('./routes/update.routes.js'));
 app.use('/api/leads', require('./routes/lead.routes.js'));
 app.use('/api/lead', require('./routes/lead.routes.js'));  // spec alias
-app.use('/api/current-affairs', require('./routes/currentaffairs.routes.js'));
+app.use('/api/current-affairs', cache, require('./routes/currentaffairs.routes.js'));
 app.use('/api/demo-requests', demoRoutes);
-app.use('/api/stats', require('./routes/stats.routes.js'));
-app.use('/api/testimonials', require('./routes/testimonials.routes.js'));
-app.use('/api/selections', require('./routes/selections.routes.js'));
-app.use('/api/featured-exam', require('./routes/featuredExam.routes.js'));
-app.use('/api/landing-pages', require('./routes/landingPage.routes.js'));
-app.use('/api/faculty', require('./routes/faculty.routes.js'));
-app.use('/api/batches', require('./routes/batch.routes.js'));
-app.use('/api/about', require('./routes/about.routes.js'));
-app.use('/api/media-coverage', require('./routes/mediaCoverage.routes.js'));
+app.use('/api/stats', cache, require('./routes/stats.routes.js'));
+app.use('/api/testimonials', cache, require('./routes/testimonials.routes.js'));
+app.use('/api/selections', cache, require('./routes/selections.routes.js'));
+app.use('/api/featured-exam', cache, require('./routes/featuredExam.routes.js'));
+app.use('/api/landing-pages', cache, require('./routes/landingPage.routes.js'));
+app.use('/api/faculty', cache, require('./routes/faculty.routes.js'));
+app.use('/api/batches', cache, require('./routes/batch.routes.js'));
+app.use('/api/about', cache, require('./routes/about.routes.js'));
+app.use('/api/media-coverage', cache, require('./routes/mediaCoverage.routes.js'));
 app.use('/api/inquiries', require('./routes/inquiry.routes.js'));
-app.use('/api/blog/posts', require('./routes/blogPosts.routes.js'));
-app.use('/api/blog/categories', require('./routes/categories.routes.js'));
+app.use('/api/blog/posts', cache, require('./routes/blogPosts.routes.js'));
+app.use('/api/blog/categories', cache, require('./routes/categories.routes.js'));
 // Global error handler - catches any unhandled errors
 app.use((err, req, res, next) => {
   console.error('🔴 ERROR:', err);

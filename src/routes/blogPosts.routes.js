@@ -4,10 +4,28 @@ const BlogPost = require('../models/BlogPost.model');
 const Category = require('../models/Category.model');
 const { protect } = require('../middleware/auth');
 
-// ============ ADMIN ROUTES (declared before /:slug to avoid param collision) ============
+function normalizeCategories(categories) {
+  if (!Array.isArray(categories)) return [];
+  return categories
+    .map(item => {
+      if (typeof item === 'string' || typeof item === 'number') return item;
+      if (item && typeof item === 'object') return item._id || item.value || item.id || null;
+      return null;
+    })
+    .filter(Boolean);
+}
 
-// Stats must come before /admin/:id to prevent "stats" being treated as an id
-router.get('/admin/stats/summary', protect, async (req, res) => {
+function hasVisibleContent(content) {
+  if (!content) return false;
+  const plainText = String(content).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  return plainText.length > 0;
+}
+
+const adminRouter = express.Router();
+adminRouter.use(protect);
+
+// Stats must come before /:id to prevent "stats" being treated as an id
+adminRouter.get('/stats/summary', async (req, res) => {
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -43,7 +61,7 @@ router.get('/admin/stats/summary', protect, async (req, res) => {
   }
 });
 
-router.get('/admin/all', protect, async (req, res) => {
+adminRouter.get('/all', async (req, res) => {
   try {
     const { page = 1, limit = 50 } = req.query;
     const pageNum = Math.max(1, parseInt(page));
@@ -66,7 +84,7 @@ router.get('/admin/all', protect, async (req, res) => {
   }
 });
 
-router.get('/admin/:id', protect, async (req, res) => {
+adminRouter.get('/:id', async (req, res) => {
   try {
     const post = await BlogPost.findById(req.params.id)
       .populate('categories', 'name slug color')
@@ -79,7 +97,7 @@ router.get('/admin/:id', protect, async (req, res) => {
   }
 });
 
-router.post('/admin', protect, async (req, res) => {
+adminRouter.post('/', async (req, res) => {
   try {
     const data = {
       ...req.body,
@@ -87,10 +105,12 @@ router.post('/admin', protect, async (req, res) => {
       updatedBy: req.user._id,
     };
 
+    data.categories = normalizeCategories(data.categories);
+
     if (!data.title?.trim()) {
       return res.status(400).json({ success: false, error: 'Title required' });
     }
-    if (!data.content?.trim()) {
+    if (!hasVisibleContent(data.content)) {
       return res.status(400).json({ success: false, error: 'Content required' });
     }
     if (!data.categories || data.categories.length === 0) {
@@ -118,14 +138,16 @@ router.post('/admin', protect, async (req, res) => {
   }
 });
 
-router.put('/admin/:id', protect, async (req, res) => {
+adminRouter.put('/:id', async (req, res) => {
   try {
     const updates = { ...req.body, updatedBy: req.user._id };
+    if (Object.prototype.hasOwnProperty.call(updates, 'categories')) {
+      updates.categories = normalizeCategories(updates.categories);
 
-    if (updates.categories) {
       if (updates.categories.length === 0) {
         return res.status(400).json({ success: false, error: 'At least one category required' });
       }
+
       const validCategoryCount = await Category.countDocuments({
         _id: { $in: updates.categories },
         active: true,
@@ -149,7 +171,7 @@ router.put('/admin/:id', protect, async (req, res) => {
   }
 });
 
-router.delete('/admin/:id', protect, async (req, res) => {
+adminRouter.delete('/:id', async (req, res) => {
   try {
     const post = await BlogPost.findByIdAndUpdate(
       req.params.id,
@@ -164,7 +186,7 @@ router.delete('/admin/:id', protect, async (req, res) => {
   }
 });
 
-router.patch('/admin/:id/featured', protect, async (req, res) => {
+adminRouter.patch('/:id/featured', async (req, res) => {
   try {
     const post = await BlogPost.findById(req.params.id);
     if (!post) return res.status(404).json({ success: false, error: 'Not found' });
@@ -178,6 +200,9 @@ router.patch('/admin/:id/featured', protect, async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
+router.use('/admin', adminRouter);
+router.use('/manage', adminRouter);
 
 // ============ PUBLIC ROUTES ============
 
