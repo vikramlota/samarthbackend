@@ -111,10 +111,18 @@ router.get('/', async (req, res) => {
 
 router.get('/:slug', async (req, res) => {
   try {
-    const category = await Category.findOne({
-      slug: req.params.slug.toLowerCase(),
-      active: true,
-    }).lean();
+    const param = req.params.slug;
+    let category;
+
+    // Check if param is a valid MongoDB ObjectId
+    if (param && param.match(/^[0-9a-fA-F]{24}$/)) {
+      category = await Category.findById(param).lean();
+    } else {
+      category = await Category.findOne({
+        slug: param.toLowerCase(),
+        active: true,
+      }).lean();
+    }
 
     if (!category) {
       return res.status(404).json({ success: false, error: 'Category not found' });

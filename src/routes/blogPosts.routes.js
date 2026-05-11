@@ -309,12 +309,22 @@ router.get('/:slug/related', async (req, res) => {
 
 router.get('/:slug', async (req, res) => {
   try {
-    const post = await BlogPost.findOne({
-      slug: req.params.slug.toLowerCase(),
-      active: true,
-    })
-      .populate('categories', 'name slug color')
-      .lean();
+    const param = req.params.slug;
+    let post;
+
+    // Check if param is a valid MongoDB ObjectId
+    if (param && param.match(/^[0-9a-fA-F]{24}$/)) {
+      post = await BlogPost.findById(param)
+        .populate('categories', 'name slug color')
+        .lean();
+    } else {
+      post = await BlogPost.findOne({
+        slug: param.toLowerCase(),
+        active: true,
+      })
+        .populate('categories', 'name slug color')
+        .lean();
+    }
 
     if (!post) {
       return res.status(404).json({ success: false, error: 'Post not found' });
