@@ -262,14 +262,14 @@ const deleteCourse = async (req, res) => {
 };
 
 // @desc    Get a single course by ID or Slug
-// @route   GET /api/courses/:id
+// @route   GET /api/courses/:slug
 // @access  Public
 const getCourseById = async (req, res) => {
   try {
-    const param = req.params.id;
+    const param = req.params.slug;
     let course;
 
-    if (param.match(/^[0-9a-fA-F]{24}$/)) {
+    if (param && param.match(/^[0-9a-fA-F]{24}$/)) {
       course = await Course.findById(param);
     } else {
       course = await Course.findOne({ slug: param });

@@ -38,7 +38,9 @@ router.post('/login', loginLimiter, async (req, res) => {
       return res.status(400).json({ success: false, error: 'Email and password required' });
     }
 
-    const user = await User.findOne({ email: email.toLowerCase().trim(), active: true })
+    // Ensure email is a string before calling toLowerCase
+    const emailStr = String(email).toLowerCase().trim();
+    const user = await User.findOne({ email: emailStr, active: true })
       .select('+passwordHash');
 
     if (!user) {
