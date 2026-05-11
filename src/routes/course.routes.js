@@ -4,6 +4,7 @@ const router = express.Router();
 // 1. Import updateCourse along with the others
 const { 
     getCourses,
+    getCourseById,
     getCourseBySlug,
     createCourse, 
     deleteCourse, 
@@ -22,7 +23,7 @@ router.route('/')
 // Private (Admin): Delete or Update a specific course
 // Public: Get a specific course by ID or Slug
 router.route('/:slug')
-    .get(getCourseBySlug) // This will handle both ID and Slug in the controller
+    .get(getCourseById) // This supports both ObjectId and slug values
     .delete(protect, deleteCourse)
     .put(protect, upload.single('image'), updateCourse); // <--- Added Edit Route
 
