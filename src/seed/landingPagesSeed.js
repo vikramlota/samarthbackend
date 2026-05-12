@@ -962,6 +962,184 @@ const seedData = [
       subtitle: 'Call or WhatsApp to book a session. No registration fee for the demo.',
     },
   },
+  {
+  slug: 'psssb-online-course-punjab-govt-exams',
+  examShortName: 'PSSSB',
+  examFullName: 'Punjab Subordinate Services Selection Board Exams',
+  active: true,
+  displayOrder: 2,
+  facultyTags: ['psssb', 'punjab-govt', 'patwari', 'punjab-police'],
+
+  seo: {
+    title: 'PSSSB Online Course for Punjab Government Exams | Samarth Academy',
+    description: 'Prepare for Punjab Govt Exams like Patwari, Clerk, Excise Inspector & more with Samarth Academy’s online recorded course. Full syllabus, mock tests & expert guidance.',
+    keywords: 'PSSSB online course, Punjab govt exams preparation, Patwari coaching Punjab, Clerk exam Punjab, Punjab GK course online',
+    canonical: 'https://thesamarthacademy.in/psssb-online-course-punjab-govt-exams',
+    ogImage: 'https://thesamarthacademy.in/og/psssb-course.jpg',
+  },
+
+  hero: {
+    badge: '🚀 Complete PSSSB Preparation',
+    headline: 'Crack Punjab Govt Exams with',
+    headlineAccent: 'PSSSB Online Course',
+    subheadline: 'Complete preparation for Patwari, Clerk, Excise Inspector & more — learn anytime, anywhere with expert faculty of Samarth Academy.',
+    trustPoints: [
+      'Complete syllabus coverage',
+      'Recorded lectures + PDF notes',
+      'Mock tests & PYQs included',
+      'Learn at your own pace',
+    ],
+  },
+
+  quickInfo: {
+    duration: 'Flexible (Self-Paced)',
+    fees: 'Affordable Pricing',
+    batchSize: 'Unlimited (Online)',
+    mode: 'Online Recorded Course',
+  },
+
+  overview: {
+    paragraphs: [
+      'Punjab Subordinate Services Selection Board (PSSSB) conducts multiple recruitment exams every year for posts like Patwari, Clerk, Excise Inspector, Naib Tehsildar, and more. These exams open doors to stable and prestigious government careers in Punjab.',
+      'Samarth Academy’s PSSSB Online Course is designed to cover the complete syllabus with a practical, exam-oriented approach. Whether you are starting from zero or revising, this course gives you the structure and clarity needed to stay consistent.',
+      'With high-quality recorded lectures, PDF notes, practice sets, and mock tests, you can prepare anytime, anywhere. This course is ideal for college students, working aspirants, and serious candidates aiming for selection.',
+    ],
+    examStats: [
+      { iconName: 'FaBriefcase', label: 'Posts Covered', value: '10+' },
+      { iconName: 'FaGraduationCap', label: 'Eligibility', value: '12th / Graduation' },
+      { iconName: 'FaCalendar', label: 'Exam Frequency', value: 'Regular Recruitments' },
+      { iconName: 'FaLaptop', label: 'Mode', value: 'Online (Recorded)' },
+    ],
+  },
+
+  whyChoose: [
+    {
+      iconName: 'FaBook',
+      title: 'Complete Syllabus Coverage',
+      description: 'Every subject covered in detail according to the latest PSSSB pattern.',
+      iconBg: 'red',
+    },
+    {
+      iconName: 'FaVideo',
+      title: 'High Quality Lectures',
+      description: 'Crystal clear recorded classes designed for concept clarity and revision.',
+      iconBg: 'orange',
+    },
+    {
+      iconName: 'FaClipboardList',
+      title: 'Mock Tests & Practice Sets',
+      description: 'Regular practice to build speed, accuracy, and exam confidence.',
+      iconBg: 'red',
+    },
+    {
+      iconName: 'FaClock',
+      title: 'Learn Anytime',
+      description: 'Study at your own pace—perfect for students and working aspirants.',
+      iconBg: 'orange',
+    },
+    {
+      iconName: 'FaUserTie',
+      title: 'Expert Faculty',
+      description: 'Experienced teachers guiding thousands of Punjab govt aspirants.',
+      iconBg: 'red',
+    },
+    {
+      iconName: 'FaMapMarkedAlt',
+      title: 'Punjab-Focused Prep',
+      description: 'Special emphasis on Punjab GK and state-specific topics.',
+      iconBg: 'orange',
+    },
+  ],
+
+  courseDetails: {
+    inclusions: [
+      'Quantitative Aptitude',
+      'General Studies',
+      'Punjab GK & Current Affairs',
+      'Reasoning & Mental Ability',
+      'English & Punjabi',
+      'Computer Awareness',
+      'Recorded video lectures',
+      'PDF notes for all subjects',
+      'Previous year questions discussion',
+      'Regular mock tests & practice sets',
+      'Updated content as per latest pattern',
+    ],
+    fees: {
+      original: 4999,
+      discounted: 2999,
+      currency: '₹',
+      emiAvailable: false,
+      emiNote: '',
+    },
+  },
+
+  syllabus: {
+    subjects: [
+      {
+        name: 'Quantitative Aptitude',
+        topics: ['Percentage', 'Ratio', 'Profit & Loss', 'Time & Work', 'SI & CI', 'Simplification', 'Data Interpretation'],
+      },
+      {
+        name: 'Reasoning',
+        topics: ['Analogy', 'Series', 'Coding-Decoding', 'Blood Relations', 'Direction Sense', 'Puzzles'],
+      },
+      {
+        name: 'General Studies',
+        topics: ['History', 'Polity', 'Geography', 'Economy', 'Science'],
+      },
+      {
+        name: 'Punjab GK',
+        topics: ['Punjab History', 'Culture', 'Geography', 'Current Affairs'],
+      },
+      {
+        name: 'Language',
+        topics: ['English Grammar', 'Vocabulary', 'Punjabi Grammar & Usage'],
+      },
+      {
+        name: 'Computer Awareness',
+        topics: ['Basics of Computers', 'Internet', 'MS Office', 'Digital Awareness'],
+      },
+    ],
+  },
+
+  faqs: [
+    faq('Which exams are covered in this course?', 'This course covers major PSSSB exams like Patwari, Clerk, Excise Inspector, Naib Tehsildar, and more.', 0),
+    faq('Is this course suitable for beginners?', 'Yes, it is designed for both beginners and advanced aspirants with structured lessons.', 1),
+    faq('Is the course live or recorded?', 'This is a recorded course, so you can learn anytime at your convenience.', 2),
+    faq('Will I get study material?', 'Yes, PDF notes and practice materials are provided for all subjects.', 3),
+    faq('Are mock tests included?', 'Yes, regular mock tests and practice sets are included.', 4),
+    faq('Can I access it on mobile?', 'Yes, the course is accessible on both mobile and laptop.', 5),
+    faq('Is Punjab GK covered?', 'Yes, special focus is given to Punjab GK and current affairs.', 6),
+    faq('How long will I have access?', 'Access duration depends on the course plan but is typically long-term.', 7),
+    faq('Who are the teachers?', 'Experienced faculty from Samarth Academy with proven results.', 8),
+    faq('How do I enroll?', 'You can enroll using the course link provided on the page.', 9),
+  ],
+
+  midCta: {
+    eyebrow: '🔥 Start Anytime',
+    title: 'Prepare Smart with PSSSB Online Course',
+    description: 'Join thousands of aspirants preparing for Punjab Government Exams with expert guidance and structured learning.',
+    trustPoints: ['Recorded classes', 'Affordable fees', 'Full syllabus coverage'],
+  },
+
+  finalCta: {
+    eyebrow: 'Your Punjab Govt Job Journey Starts Here',
+    title: 'Enroll in PSSSB Online Course Today',
+    subtitle: 'Start learning instantly — anytime, anywhere. Your preparation, your pace.',
+  },
+
+  ctas: {
+    primary: {
+      text: 'Enroll Now',
+      link: 'https://classplusapp.com/diy/courses/course-overview?id=835189',
+    },
+    secondary: {
+      text: 'Watch Free Classes',
+      link: 'https://youtube.com/playlist?list=PLcWhNAUDnj-ZtNbdjs-U6o21QT7iWp61n',
+    },
+  },
+}
 
 ]; // end seedData
 
