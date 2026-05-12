@@ -6,8 +6,8 @@ const seoSchema = Joi.object({
   title:       Joi.string().max(70).required(),
   description: Joi.string().max(160).required(),
   keywords:    Joi.string().allow('', null),
-  canonical:   Joi.string().uri().required(),
-  ogImage:     Joi.string().uri().allow('', null),
+  canonical:   Joi.string().uri({ scheme: ['http', 'https'] }).required(),
+  ogImage:     Joi.string().uri({ scheme: ['http', 'https'] }).allow('', null),
 }).required();
 
 const heroSchema = Joi.object({
@@ -50,8 +50,8 @@ const landingPageUpdateSchema = Joi.object({
     title:       Joi.string().max(70),
     description: Joi.string().max(160),
     keywords:    Joi.string().allow('', null),
-    canonical:   Joi.string().uri(),
-    ogImage:     Joi.string().uri().allow('', null),
+    canonical:   Joi.string().uri({ scheme: ['http', 'https'] }),
+    ogImage:     Joi.string().uri({ scheme: ['http', 'https'] }).allow('', null),
   }),
   hero: Joi.object({
     headline:       Joi.string(),
