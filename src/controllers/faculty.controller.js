@@ -55,6 +55,18 @@ const adminListAll = async (req, res) => {
   }
 };
 
+// GET /api/faculty/admin/:id
+const adminGetById = async (req, res) => {
+  try {
+    const member = await Faculty.findById(req.params.id);
+    if (!member) return res.status(404).json({ success: false, error: 'Faculty not found' });
+    res.json({ success: true, data: member });
+  } catch (error) {
+    console.error('Faculty admin get by ID error:', error.message);
+    res.status(500).json({ success: false, error: 'Failed to fetch faculty' });
+  }
+};
+
 // POST /api/faculty/admin
 const adminCreate = async (req, res) => {
   try {
@@ -120,4 +132,4 @@ const adminDelete = async (req, res) => {
   }
 };
 
-module.exports = { getFaculty, getFacultyById, adminListAll, adminCreate, adminUpdate, adminDelete };
+module.exports = { getFaculty, getFacultyById, adminListAll, adminGetById, adminCreate, adminUpdate, adminDelete };
