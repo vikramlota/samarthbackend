@@ -38,14 +38,13 @@ FacultySchema.index({ active: 1, examTags: 1 });
 FacultySchema.index({ slug: 1 });
 
 // Auto-generate slug from name on first save
-FacultySchema.pre('save', function (next) {
+FacultySchema.pre('save', function () {
   if (this.isModified('name') && !this.slug) {
     this.slug = this.name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
   }
-  next();
 });
 
 module.exports = mongoose.model('Faculty', FacultySchema);

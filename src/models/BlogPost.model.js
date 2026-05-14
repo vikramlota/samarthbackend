@@ -75,7 +75,7 @@ BlogPostSchema.index({ active: 1, publishedAt: -1 });
 BlogPostSchema.index({ categories: 1, active: 1, publishedAt: -1 });
 BlogPostSchema.index({ featured: 1, active: 1, publishedAt: -1 });
 
-BlogPostSchema.pre('save', async function (next) {
+BlogPostSchema.pre('save', async function () {
   // Auto-generate slug from title on create or title change
   if (!this.slug || this.isModified('title')) {
     this.slug = await generateUniqueSlug(this.constructor, this.title, this._id);
@@ -102,8 +102,6 @@ BlogPostSchema.pre('save', async function (next) {
   if (!this.seo.title) this.seo.title = this.title.substring(0, 70);
   if (!this.seo.description) this.seo.description = this.excerpt ? this.excerpt.substring(0, 160) : '';
   if (!this.seo.ogImage && this.coverImage) this.seo.ogImage = this.coverImage;
-
-  next();
 });
 
 // Recompute category postCounts after any save
