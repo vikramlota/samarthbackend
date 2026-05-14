@@ -3,8 +3,8 @@ const Joi = require('joi');
 // ── Sub-schemas ────────────────────────────────────────────────────────────────
 
 const seoSchema = Joi.object({
-  title:       Joi.string().max(70).required(),
-  description: Joi.string().max(160).required(),
+  title:       Joi.string().max(200).required(),
+  description: Joi.string().max(500).required(),
   keywords:    Joi.string().allow('', null),
   canonical:   Joi.string().uri({ scheme: ['http', 'https'] }).required(),
   ogImage:     Joi.string().uri({ scheme: ['http', 'https'] }).allow('', null),
@@ -47,8 +47,8 @@ const landingPageUpdateSchema = Joi.object({
   active:        Joi.boolean(),
   displayOrder:  Joi.number().integer(),
   seo: Joi.object({
-    title:       Joi.string().max(70),
-    description: Joi.string().max(160),
+    title:       Joi.string().max(200),
+    description: Joi.string().max(500),
     keywords:    Joi.string().allow('', null),
     canonical:   Joi.string().uri({ scheme: ['http', 'https'] }),
     ogImage:     Joi.string().uri({ scheme: ['http', 'https'] }).allow('', null),

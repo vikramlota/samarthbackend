@@ -56,8 +56,8 @@ const BlogPostSchema = new mongoose.Schema({
   publishedAt: { type: Date, default: Date.now, index: true },
 
   seo: {
-    title: { type: String, maxLength: 70 },
-    description: { type: String, maxLength: 160 },
+    title: { type: String, maxLength: 200 },
+    description: { type: String, maxLength: 500 },
     keywords: { type: String },
     ogImage: { type: String },
     canonicalUrl: { type: String },

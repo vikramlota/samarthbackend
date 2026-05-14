@@ -35,8 +35,8 @@ const CategorySchema = new mongoose.Schema({
 
   // SEO for category page (e.g., /blog/category/ssc-tips)
   seo: {
-    title: { type: String, maxLength: 70 },
-    description: { type: String, maxLength: 160 },
+    title: { type: String, maxLength: 200 },
+    description: { type: String, maxLength: 500 },
   },
 
   // Denormalized counter for performance
