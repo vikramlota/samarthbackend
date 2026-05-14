@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const SeoSchema = new mongoose.Schema({
-  title:       { type: String, required: true, maxlength: 100 },
+  title:       { type: String, required: true, maxlength: 200 },
   description: { type: String, required: true, maxlength: 500 },
   keywords:    { type: String },
   canonical:   { type: String, required: true },
