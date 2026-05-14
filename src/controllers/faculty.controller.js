@@ -117,16 +117,12 @@ const adminUpdate = async (req, res) => {
   }
 };
 
-// DELETE /api/faculty/admin/:id  — soft delete
+// DELETE /api/faculty/admin/:id  — hard delete
 const adminDelete = async (req, res) => {
   try {
-    const member = await Faculty.findByIdAndUpdate(
-      req.params.id,
-      { active: false },
-      { new: true }
-    );
+    const member = await Faculty.findByIdAndDelete(req.params.id);
     if (!member) return res.status(404).json({ success: false, error: 'Faculty not found' });
-    res.json({ success: true, message: 'Faculty deactivated' });
+    res.json({ success: true, message: 'Faculty deleted permanently' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
