@@ -59,4 +59,47 @@ const uploadOnCloudinary = async (filePathOrBuffer, fileName = 'upload') => {
     }
 }
 
-module.exports = { uploadOnCloudinary };
+const deleteFromCloudinary = async (cloudinaryUrl) => {
+    try {
+        if (!cloudinaryUrl) return null;
+
+        // Verify Cloudinary credentials
+        if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+            console.warn('Missing Cloudinary credentials. Cannot delete image.');
+            return null;
+        }
+
+        // Example URL: https://res.cloudinary.com/cloud_name/image/upload/v123456789/folder/image.jpg
+        // Extract public_id
+        const urlParts = cloudinaryUrl.split('/');
+        const uploadIndex = urlParts.indexOf('upload');
+        if (uploadIndex === -1) return null; // Not a valid Cloudinary upload URL
+
+        // The parts after 'upload/' and 'v123456789/' (version) form the public ID
+        // Often it looks like: upload/v123456/folder/image.jpg
+        let publicIdParts = urlParts.slice(uploadIndex + 1);
+        
+        // Remove version if it exists (starts with 'v' and followed by numbers)
+        if (publicIdParts[0] && /^v\d+$/.test(publicIdParts[0])) {
+            publicIdParts.shift();
+        }
+
+        // Join the rest and remove the extension
+        let publicId = publicIdParts.join('/');
+        const lastDotIndex = publicId.lastIndexOf('.');
+        if (lastDotIndex !== -1) {
+            publicId = publicId.substring(0, lastDotIndex);
+        }
+
+        if (!publicId) return null;
+
+        const response = await cloudinary.uploader.destroy(publicId);
+        console.log(`✅ Cloudinary delete successful for ${publicId}:`, response.result);
+        return response;
+    } catch (error) {
+        console.error("❌ Cloudinary delete error:", error.message || error);
+        return null; // Don't throw, we don't want to crash the app if image deletion fails
+    }
+}
+
+module.exports = { uploadOnCloudinary, deleteFromCloudinary };
