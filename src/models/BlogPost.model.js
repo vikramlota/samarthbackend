@@ -41,6 +41,8 @@ const BlogPostSchema = new mongoose.Schema({
     required: true,
   }],
 
+  tags: [{ type: String }],
+
   // Single institute author — extendable to Faculty later
   author: {
     name: { type: String, default: 'Samarth Academy' },
@@ -58,7 +60,7 @@ const BlogPostSchema = new mongoose.Schema({
   seo: {
     title: { type: String, maxLength: 200 },
     description: { type: String, maxLength: 500 },
-    keywords: { type: String },
+    keywords: [{ type: String }],
     ogImage: { type: String },
     canonicalUrl: { type: String },
     noindex: { type: Boolean, default: false },
