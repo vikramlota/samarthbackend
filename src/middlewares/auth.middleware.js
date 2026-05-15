@@ -1,42 +1,47 @@
 const jwt = require('jsonwebtoken');
-const Admin = require('../models/Admin.model.js');
+const User = require('../models/User');
 
-const protect = async (req, res, next) => {
-  let token;
+const JWT_SECRET = process.env.JWT_SECRET || 'change-me-in-production';
 
-  console.log("🔐 Auth check - Authorization header:", req.headers.authorization ? 'Present' : 'Missing');
-
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    try {
-      token = req.headers.authorization.split(' ')[1];
-      
-      console.log("✅ Token extracted, verifying with JWT_SECRET...");
-      
-      if (!process.env.JWT_SECRET) {
-        console.error("❌ JWT_SECRET not configured!");
-        return res.status(500).json({ message: 'Server configuration error: JWT_SECRET missing' });
-      }
-
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("✅ Token verified for admin ID:", decoded.id);
-
-      req.admin = await Admin.findById(decoded.id).select('-password');
-      if (!req.admin) {
-        console.warn("⚠️ Admin not found for token ID:", decoded.id);
-        return res.status(401).json({ message: 'Admin account not found' });
-      }
-
-      console.log("✅ Auth successful for admin:", req.admin.username);
-      return next();
-    } catch (error) {
-      console.error("❌ Token verification failed:", error.message);
-      return res.status(401).json({ message: 'Not authorized, token failed: ' + error.message });
+async function requireAuth(req, res, next) {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith('Bearer ')) {
+      return res.status(401).json({ success: false, error: 'Authentication required' });
     }
+    const token = authHeader.slice(7);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await User.findById(decoded.sub);
+    if (!user || !user.active) {
+      return res.status(401).json({ success: false, error: 'Invalid token' });
+    }
+    req.user = user;
+    next();
+  } catch (error) {
+    return res.status(401).json({ success: false, error: 'Invalid or expired token' });
   }
+}
 
-  // No token provided
-  console.warn("⚠️ No Authorization token provided");
-  return res.status(401).json({ message: 'Not authorized, no token provided' });
-};
+async function requireAdmin(req, res, next) {
+  await requireAuth(req, res, () => {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, error: 'Admin access required' });
+    }
+    next();
+  });
+}
 
-module.exports = { protect };
+async function requireEditor(req, res, next) {
+  await requireAuth(req, res, () => {
+    if (!['admin', 'editor'].includes(req.user.role)) {
+      return res.status(403).json({ success: false, error: 'Editor access required' });
+    }
+    next();
+  });
+}
+
+// Backward-compat alias for old routes that used protect
+const protect = requireEditor;
+const adminAuth = requireEditor;
+
+module.exports = { requireAuth, requireAdmin, requireEditor, protect, adminAuth };

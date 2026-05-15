@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getResults, addResult, deleteResult } = require('../controllers/result.controller.js');
-const { protect } = require('../middleware/auth');
+const { protect } = require('../middlewares/auth.middleware.js');
 const { upload, handleMullerError } = require('../middlewares/upload.middleware.js');
 
 // Logging middleware for debugging

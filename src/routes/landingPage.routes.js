@@ -10,7 +10,7 @@ const {
   adminSoftDelete,
   adminDuplicate,
 } = require('../controllers/landingPage.controller.js');
-const { protect, requireAdmin } = require('../middleware/auth');
+const { protect, requireAdmin } = require('../middlewares/auth.middleware.js');
 const { validateLandingPage } = require('../middlewares/validation.middleware.js');
 const { publicReadLimiter } = require('../middlewares/rateLimiter.middleware.js');
 
@@ -46,3 +46,4 @@ router.post('/admin/:id/duplicate', protect, adminDuplicate);
 router.get('/:slug', publicReadLimiter, getLandingPageBySlug);
 
 module.exports = router;
+

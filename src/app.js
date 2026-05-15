@@ -6,7 +6,7 @@ const app = express()
 const sitemapRoutes = require('./routes/sitemap.routes.js');
 const homepageRoutes = require('./routes/homepage.routes.js');
 const connectDB = require('./db/index.js');
-const cache = require('./middleware/cache.js');
+const cache = require('./middlewares/cache.middleware.js');
 
 // ⚡ CRITICAL: Set CORS headers FIRST, before any other middleware
 // This ensures CORS headers are sent even if routes fail
@@ -159,7 +159,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/upload', require('./routes/upload'));
 app.use('/api', sitemapRoutes);
 app.use('/api/homepage', cache, homepageRoutes);
-app.use('/api/admin', require('./routes/Admin.routes.js'));
+
 app.use('/api/courses', cache, require('./routes/course.routes.js'));
 app.use('/api/results', cache, require('./routes/result.routes.js'));
 app.use('/api/notifications', cache, require('./routes/update.routes.js'));

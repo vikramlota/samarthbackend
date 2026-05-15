@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getBatches, adminListAll, adminCreate, adminUpdate, adminDelete } = require('../controllers/batch.controller.js');
-const { protect, requireAdmin } = require('../middleware/auth');
+const { protect, requireAdmin } = require('../middlewares/auth.middleware.js');
 const { publicReadLimiter } = require('../middlewares/rateLimiter.middleware.js');
 
 // Admin routes first
@@ -14,3 +14,4 @@ router.delete('/admin/:id', requireAdmin, adminDelete);
 router.get('/', publicReadLimiter, getBatches);
 
 module.exports = router;
+

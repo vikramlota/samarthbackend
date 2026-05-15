@@ -118,7 +118,7 @@ const AboutPageSchema = new mongoose.Schema({
     ogImage:     { type: String },
   },
 
-  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
+  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true });
 
 // Singleton helper — auto-creates the one doc if it doesn't exist yet

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { requireEditor } = require('../middleware/auth');
+const { requireEditor } = require('../middlewares/auth.middleware.js');
 const { uploadOnCloudinary } = require('../utils/cloudinary');
 
 const storage = multer.memoryStorage();

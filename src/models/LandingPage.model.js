@@ -102,8 +102,8 @@ const LandingPageSchema = new mongoose.Schema({
 
   facultyTags: [{ type: String }],
 
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
-  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true });
 
 LandingPageSchema.index({ slug: 1, active: 1 });

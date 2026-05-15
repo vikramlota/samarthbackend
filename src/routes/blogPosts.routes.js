@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const BlogPost = require('../models/BlogPost.model');
 const Category = require('../models/Category.model');
-const { protect } = require('../middleware/auth');
+const { protect } = require('../middlewares/auth.middleware.js');
 
 function normalizeCategories(categories) {
   if (!Array.isArray(categories)) return [];
@@ -340,3 +340,4 @@ router.get('/:slug', async (req, res) => {
 });
 
 module.exports = router;
+

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getMediaCoverage, adminListAll, adminCreate, adminUpdate, adminDelete } = require('../controllers/mediaCoverage.controller.js');
-const { protect, requireAdmin } = require('../middleware/auth');
+const { protect, requireAdmin } = require('../middlewares/auth.middleware.js');
 const { upload } = require('../middlewares/upload.middleware.js');
 const { publicReadLimiter } = require('../middlewares/rateLimiter.middleware.js');
 
@@ -15,3 +15,4 @@ router.delete('/admin/:id', requireAdmin, adminDelete);
 router.get('/', publicReadLimiter, getMediaCoverage);
 
 module.exports = router;
+

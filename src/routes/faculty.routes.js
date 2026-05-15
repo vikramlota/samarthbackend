@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getFaculty, getFacultyById, adminListAll, adminCreate, adminUpdate, adminDelete, adminGetById } = require('../controllers/faculty.controller.js');
-const { protect, requireAdmin } = require('../middleware/auth');
+const { protect, requireAdmin } = require('../middlewares/auth.middleware.js');
 const { upload } = require('../middlewares/upload.middleware.js');
 const { publicReadLimiter } = require('../middlewares/rateLimiter.middleware.js');
 
@@ -17,3 +17,4 @@ router.get('/', publicReadLimiter, getFaculty);
 router.get('/:idOrSlug', publicReadLimiter, getFacultyById);
 
 module.exports = router;
+

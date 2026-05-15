@@ -69,8 +69,8 @@ const BlogPostSchema = new mongoose.Schema({
   views: { type: Number, default: 0 },
 
   // Audit — references Admin model
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
-  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true });
 
 BlogPostSchema.index({ active: 1, publishedAt: -1 });

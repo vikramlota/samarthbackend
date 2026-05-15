@@ -8,7 +8,7 @@ const {
   updateCurrentAffair // <--- Import this
 } = require('../controllers/currentaffairs.controllers.js');
 
-const { protect, requireAdmin } = require('../middleware/auth');
+const { protect, requireAdmin } = require('../middlewares/auth.middleware.js');
 const { upload, handleMullerError } = require('../middlewares/upload.middleware.js');
 
 // Logging middleware for debugging

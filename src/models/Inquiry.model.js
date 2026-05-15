@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const NoteSchema = new mongoose.Schema({
   text:     { type: String, required: true },
-  addedBy:  { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
+  addedBy:  { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   addedAt:  { type: Date, default: Date.now },
 }, { _id: false });
 
@@ -33,7 +33,7 @@ const InquirySchema = new mongoose.Schema({
   },
 
   notes:       [NoteSchema],
-  assignedTo:  { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
+  assignedTo:  { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   contactedAt: { type: Date },
   convertedAt: { type: Date },
 

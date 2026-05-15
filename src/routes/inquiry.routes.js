@@ -8,7 +8,7 @@ const {
   adminUpdate,
   adminAddNote,
 } = require('../controllers/inquiry.controller.js');
-const { protect } = require('../middleware/auth');
+const { protect } = require('../middlewares/auth.middleware.js');
 const { createRateLimiter } = require('../middlewares/rateLimiter.middleware.js');
 
 // Strict rate limit for the public submission endpoint
@@ -29,3 +29,4 @@ router.post('/admin/:id/notes', protect, adminAddNote);
 router.post('/', submitLimiter, submitInquiry);
 
 module.exports = router;
+

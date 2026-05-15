@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getAbout, updateAbout, updateSection, uploadPhoto } = require('../controllers/about.controller.js');
-const { protect } = require('../middleware/auth');
+const { protect } = require('../middlewares/auth.middleware.js');
 const { upload } = require('../middlewares/upload.middleware.js');
 const { publicReadLimiter } = require('../middlewares/rateLimiter.middleware.js');
 
@@ -18,3 +18,4 @@ router.patch('/admin/:section', protect, updateSection);
 router.post('/admin/upload', protect, upload.single('photo'), uploadPhoto);
 
 module.exports = router;
+

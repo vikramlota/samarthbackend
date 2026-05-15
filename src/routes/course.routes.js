@@ -11,7 +11,7 @@ const {
     updateCourse 
 } = require('../controllers/Course.controller.js');
 
-const { protect } = require('../middleware/auth');
+const { protect } = require('../middlewares/auth.middleware.js');
 const { upload } = require('../middlewares/upload.middleware.js');
 
 // Public: Get all courses
@@ -28,3 +28,4 @@ router.route('/:slug')
     .put(protect, upload.single('image'), updateCourse); // <--- Added Edit Route
 
 module.exports = router;
+

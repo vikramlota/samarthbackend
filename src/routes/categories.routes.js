@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Category = require('../models/Category.model');
-const { protect } = require('../middleware/auth');
+const { protect } = require('../middlewares/auth.middleware.js');
 const { generateUniqueSlug } = require('../utils/slug');
 
 // ================= ADMIN ROUTES =================
