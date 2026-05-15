@@ -60,7 +60,7 @@ const BlogPostSchema = new mongoose.Schema({
   seo: {
     title: { type: String, maxLength: 200 },
     description: { type: String, maxLength: 500 },
-    keywords: [{ type: String }],
+    keywords: { type: String },
     ogImage: { type: String },
     canonicalUrl: { type: String },
     noindex: { type: Boolean, default: false },
