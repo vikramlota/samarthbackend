@@ -52,6 +52,7 @@ const FeesSchema = new mongoose.Schema({
 const CourseDetailsSchema = new mongoose.Schema({
   inclusions: [{ type: String }],
   fees:       FeesSchema,
+  enrollNowLink: { type: String },
 }, { _id: false });
 
 const SyllabusSubjectSchema = new mongoose.Schema({
