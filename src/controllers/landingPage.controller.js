@@ -7,7 +7,7 @@ const listLandingPages = async (req, res) => {
   try {
     const fields = req.query.fields
       ? req.query.fields.split(',').join(' ')
-      : 'slug examShortName examFullName seo.title displayOrder';
+      : 'slug examShortName examFullName courseThumbnail seo.title displayOrder';
 
     const pages = await LandingPage.find({ active: true })
       .select(fields)
@@ -48,7 +48,7 @@ const getLandingPageBySlug = async (req, res) => {
 const adminListAll = async (req, res) => {
   try {
     const pages = await LandingPage.find({})
-      .select('slug examShortName examFullName active displayOrder updatedAt')
+      .select('slug examShortName examFullName courseThumbnail active displayOrder updatedAt')
       .sort({ displayOrder: 1, createdAt: 1 })
       .lean();
 

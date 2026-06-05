@@ -31,6 +31,7 @@ const landingPageSchema = Joi.object({
   examFullName:  Joi.string().required(),
   active:        Joi.boolean(),
   displayOrder:  Joi.number().integer(),
+  courseThumbnail: Joi.string().allow('', null),
 
   seo:           seoSchema,
   hero:          heroSchema,
@@ -46,6 +47,7 @@ const landingPageUpdateSchema = Joi.object({
   examFullName:  Joi.string(),
   active:        Joi.boolean(),
   displayOrder:  Joi.number().integer(),
+  courseThumbnail: Joi.string().allow('', null),
   seo: Joi.object({
     title:       Joi.string().max(200),
     description: Joi.string().max(500),

@@ -89,6 +89,7 @@ const LandingPageSchema = new mongoose.Schema({
   examFullName:  { type: String, required: true },
   active:        { type: Boolean, default: true, index: true },
   displayOrder:  { type: Number, default: 0 },
+  courseThumbnail: { type: String, default: '' },
 
   seo:           { type: SeoSchema, required: true },
   hero:          { type: HeroSchema, required: true },
