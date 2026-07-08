@@ -53,5 +53,47 @@ const deleteDemoRequest = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// @desc    Get all demo requests (Admin, Paginated)
+const adminListAll = async (req, res) => {
+  try {
+    const { status, page = 1, limit = 50 } = req.query;
+    const filter = {};
+    if (status) filter.status = status;
 
-module.exports = { createDemoRequest, getDemoRequests, updateDemoStatus, deleteDemoRequest };
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const [data, total] = await Promise.all([
+      DemoRequest.find(filter).sort({ createdAt: -1 }).skip(skip).limit(parseInt(limit)).lean(),
+      DemoRequest.countDocuments(filter),
+    ]);
+
+    res.json({ success: true, data, total, page: parseInt(page) });
+  } catch (error) {
+    console.error('Demo list error:', error.message);
+    res.status(500).json({ success: false, error: 'Failed to fetch demo requests' });
+  }
+};
+
+// @desc    Get stats for demo requests
+const adminStats = async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    const [total, todayCount, newThisWeek] = await Promise.all([
+      DemoRequest.countDocuments({}),
+      DemoRequest.countDocuments({ createdAt: { $gte: today } }),
+      DemoRequest.countDocuments({ createdAt: { $gte: oneWeekAgo } }),
+    ]);
+
+    res.json({ success: true, data: { total, today: todayCount, newThisWeek } });
+  } catch (error) {
+    console.error('Demo stats error:', error.message);
+    res.status(500).json({ success: false, error: 'Failed to fetch stats' });
+  }
+};
+
+module.exports = { createDemoRequest, getDemoRequests, updateDemoStatus, deleteDemoRequest, adminListAll, adminStats };
