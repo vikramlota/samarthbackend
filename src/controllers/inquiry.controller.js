@@ -1,9 +1,29 @@
 const Inquiry = require('../models/Inquiry.model.js');
+const https = require('https');
 
 const PHONE_REGEX = /^[6-9]\d{9}$/;
 
 const cleanPhone = (raw = '') =>
   String(raw).replace(/^(\+91|91)/, '').replace(/[\s\-]/g, '').trim();
+
+// Fire-and-forget WhatsApp notification to admin via callmebot
+const notifyAdminWhatsApp = (name, phone, course, source) => {
+  const adminPhone = process.env.ADMIN_WHATSAPP_PHONE;
+  const apiKey = process.env.CALLMEBOT_API_KEY;
+  if (!adminPhone || !apiKey) return;
+
+  const text = encodeURIComponent(
+    `🔔 New Inquiry!\nName: ${name}\nPhone: ${phone}\nCourse: ${course || 'Not specified'}\nSource: ${source}`
+  );
+  const url = `/whatsapp.php?phone=${adminPhone}&text=${text}&apikey=${apiKey}`;
+
+  const req = https.request(
+    { hostname: 'api.callmebot.com', path: url, method: 'GET' },
+    (res) => { console.log(`📲 WhatsApp notification status: ${res.statusCode}`); }
+  );
+  req.on('error', (err) => console.error('WhatsApp notification error:', err.message));
+  req.end();
+};
 
 // ── PUBLIC ─────────────────────────────────────────────────────────────────────
 
@@ -44,6 +64,9 @@ const submitInquiry = async (req, res) => {
                       || 'unknown',
       userAgent:     req.headers['user-agent'] || undefined,
     });
+
+    // Notify admin via WhatsApp (async)
+    notifyAdminWhatsApp(inquiry.name, inquiry.phone, inquiry.course, inquiry.source);
 
     res.status(201).json({
       success: true,
@@ -157,4 +180,17 @@ const adminAddNote = async (req, res) => {
   }
 };
 
-module.exports = { submitInquiry, adminListAll, adminStats, adminGetById, adminUpdate, adminAddNote };
+// DELETE /api/inquiries/admin/:id — delete an inquiry
+const adminDelete = async (req, res) => {
+  try {
+    const inquiry = await Inquiry.findByIdAndDelete(req.params.id);
+    if (!inquiry) return res.status(404).json({ success: false, error: 'Not found' });
+    
+    console.log(`🗑️ Inquiry ${inquiry._id} deleted by ${req.admin?.username}`);
+    res.json({ success: true, message: 'Inquiry deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+module.exports = { submitInquiry, adminListAll, adminStats, adminGetById, adminUpdate, adminAddNote, adminDelete };

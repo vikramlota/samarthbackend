@@ -7,6 +7,7 @@ const {
   adminGetById,
   adminUpdate,
   adminAddNote,
+  adminDelete,
 } = require('../controllers/inquiry.controller.js');
 const { protect } = require('../middlewares/auth.middleware.js');
 const { createRateLimiter } = require('../middlewares/rateLimiter.middleware.js');
@@ -24,6 +25,7 @@ router.get('/admin/all', protect, adminListAll);
 router.get('/admin/:id', protect, adminGetById);
 router.patch('/admin/:id', protect, adminUpdate);
 router.post('/admin/:id/notes', protect, adminAddNote);
+router.delete('/admin/:id', protect, adminDelete);
 
 // PUBLIC submission
 router.post('/', submitLimiter, submitInquiry);
