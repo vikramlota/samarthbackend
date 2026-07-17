@@ -13,7 +13,7 @@ const InquirySchema = new mongoose.Schema({
 
   inquiryType: {
     type: String,
-    enum: ['course-inquiry', 'demo-class', 'visit-booking', 'admission', 'general'],
+    enum: ['course-inquiry', 'demo-class', 'demo', 'fee', 'visit-booking', 'admission', 'general'],
     default: 'general',
     index: true,
   },
