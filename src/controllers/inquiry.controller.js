@@ -25,6 +25,28 @@ const notifyAdminWhatsApp = (name, phone, course, source) => {
   req.end();
 };
 
+// Fire-and-forget ntfy notification to admin
+const notifyAdminNtfy = (name, phone, course, source, inquiryType) => {
+  const topic = process.env.NTFY_TOPIC_INQUIRY || 'samarth_inquiries';
+  const text = `Name: ${name}\nPhone: ${phone}\nCourse: ${course || 'Not specified'}\nType: ${inquiryType}\nSource: ${source}`;
+  
+  const req = https.request(
+    { 
+      hostname: 'ntfy.sh', 
+      path: `/${topic}`, 
+      method: 'POST',
+      headers: {
+        'Title': '🔔 New Samarth Academy Inquiry',
+        'Tags': 'bell,inbox_tray'
+      }
+    },
+    (res) => { console.log(`📢 ntfy notification status: ${res.statusCode}`); }
+  );
+  req.on('error', (err) => console.error('ntfy notification error:', err.message));
+  req.write(text);
+  req.end();
+};
+
 // ── PUBLIC ─────────────────────────────────────────────────────────────────────
 
 // POST /api/inquiries
@@ -67,6 +89,9 @@ const submitInquiry = async (req, res) => {
 
     // Notify admin via WhatsApp (async)
     notifyAdminWhatsApp(inquiry.name, inquiry.phone, inquiry.course, inquiry.source);
+    
+    // Notify admin via ntfy (async)
+    notifyAdminNtfy(inquiry.name, inquiry.phone, inquiry.course, inquiry.source, inquiry.inquiryType);
 
     res.status(201).json({
       success: true,
