@@ -100,7 +100,7 @@ const submitInquiry = async (req, res) => {
     });
   } catch (error) {
     console.error('Inquiry submission error:', error.message);
-    res.status(500).json({ success: false, error: 'Could not submit. Please try again.' });
+    res.status(500).json({ success: false, error: 'Server Error: ' + error.message });
   }
 };
 
