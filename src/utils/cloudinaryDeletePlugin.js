@@ -19,7 +19,7 @@ const extractCloudinaryUrls = (obj, urls = new Set()) => {
 
 const cloudinaryDeletePlugin = (schema, options) => {
   // We need to capture the document BEFORE it gets deleted
-  schema.pre(['findOneAndDelete', 'deleteOne', 'findOneAndRemove'], async function (next) {
+  schema.pre(['findOneAndDelete', 'deleteOne', 'findOneAndRemove'], async function () {
     try {
       // 'this' is the query object
       const docToUpdate = await this.model.findOne(this.getFilter()).lean();
@@ -30,11 +30,10 @@ const cloudinaryDeletePlugin = (schema, options) => {
     } catch (err) {
       console.error('Error in cloudinaryDeletePlugin pre hook:', err);
     }
-    next();
   });
 
   // After the document is successfully deleted from the database
-  schema.post(['findOneAndDelete', 'deleteOne', 'findOneAndRemove'], async function (doc, next) {
+  schema.post(['findOneAndDelete', 'deleteOne', 'findOneAndRemove'], async function (doc) {
     try {
       const urls = this._cloudinaryUrlsToDelete;
       if (urls && urls.length > 0) {
@@ -45,7 +44,6 @@ const cloudinaryDeletePlugin = (schema, options) => {
     } catch (err) {
       console.error('Error in cloudinaryDeletePlugin post hook:', err);
     }
-    next();
   });
 };
 
