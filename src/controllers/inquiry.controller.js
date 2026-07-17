@@ -36,7 +36,7 @@ const notifyAdminNtfy = (name, phone, course, source, inquiryType) => {
       path: `/${topic}`, 
       method: 'POST',
       headers: {
-        'Title': '🔔 New Samarth Academy Inquiry',
+        'Title': 'New Samarth Academy Inquiry',
         'Tags': 'bell,inbox_tray'
       }
     },
