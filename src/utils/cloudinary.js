@@ -1,5 +1,6 @@
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
+const path = require('path');
 const { Readable } = require('stream');
 
 cloudinary.config({ 
@@ -8,13 +9,62 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
-const uploadOnCloudinary = async (filePathOrBuffer, fileName = 'upload') => {
+const isJpgFile = (filePathOrBuffer, fileName) => {
+    // Check extension from fileName or filePathOrBuffer string
+    const targetName = typeof filePathOrBuffer === 'string' ? filePathOrBuffer : fileName;
+    if (targetName) {
+        const ext = path.extname(targetName).toLowerCase();
+        if (ext === '.jpg' || ext === '.jpeg') {
+            return true;
+        }
+    }
+
+    // Check magic bytes if Buffer
+    if (Buffer.isBuffer(filePathOrBuffer)) {
+        if (filePathOrBuffer.length >= 3 &&
+            filePathOrBuffer[0] === 0xff &&
+            filePathOrBuffer[1] === 0xd8 &&
+            filePathOrBuffer[2] === 0xff) {
+            return true;
+        }
+    }
+
+    // Check magic bytes if file path on disk
+    if (typeof filePathOrBuffer === 'string' && fs.existsSync(filePathOrBuffer)) {
+        try {
+            const fd = fs.openSync(filePathOrBuffer, 'r');
+            const buffer = Buffer.alloc(3);
+            fs.readSync(fd, buffer, 0, 3, 0);
+            fs.closeSync(fd);
+            if (buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) {
+                return true;
+            }
+        } catch (err) {
+            // Ignore error and fall through
+        }
+    }
+
+    return false;
+};
+
+const uploadOnCloudinary = async (filePathOrBuffer, fileName = 'upload', options = {}) => {
     try {
         if (!filePathOrBuffer) return null;
 
         // Verify Cloudinary credentials
         if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
             throw new Error('Missing Cloudinary credentials in environment variables');
+        }
+
+        const isAlreadyJpg = isJpgFile(filePathOrBuffer, fileName);
+        const uploadOptions = {
+            resource_type: "auto",
+            ...options
+        };
+
+        // If it's not already JPG, convert to JPG on Cloudinary upload
+        if (!isAlreadyJpg && !uploadOptions.format) {
+            uploadOptions.format = "jpg";
         }
 
         let response;
@@ -24,7 +74,7 @@ const uploadOnCloudinary = async (filePathOrBuffer, fileName = 'upload') => {
             // Upload buffer as stream to Cloudinary
             response = await new Promise((resolve, reject) => {
                 const stream = cloudinary.uploader.upload_stream(
-                    { resource_type: "auto" },
+                    uploadOptions,
                     (error, result) => {
                         if (error) {
                             console.error("❌ Cloudinary stream upload error:", error);
@@ -39,9 +89,7 @@ const uploadOnCloudinary = async (filePathOrBuffer, fileName = 'upload') => {
             });
         } else {
             // It's a file path string (from disk storage)
-            response = await cloudinary.uploader.upload(filePathOrBuffer, {
-                resource_type: "auto"
-            });
+            response = await cloudinary.uploader.upload(filePathOrBuffer, uploadOptions);
 
             // Remove local file if it exists
             try {
