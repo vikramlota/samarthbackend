@@ -24,7 +24,7 @@ const upload = multer({
     checkFileType(file, cb);
   },
   limits: {
-    fileSize: 10 * 1024 * 1024 // 10MB limit
+    fileSize: 25 * 1024 * 1024 // 25MB limit
   }
 });
 
@@ -32,10 +32,10 @@ const upload = multer({
 const handleMullerError = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'FILE_TOO_LARGE') {
-      return res.status(400).json({ message: 'File size exceeds 10MB limit' });
+      return res.status(400).json({ message: 'File size exceeds 25MB limit' });
     }
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({ message: 'File size exceeds 10MB limit' });
+      return res.status(400).json({ message: 'File size exceeds 25MB limit' });
     }
     return res.status(400).json({ message: `Upload error: ${err.message}` });
   }
