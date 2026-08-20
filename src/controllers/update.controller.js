@@ -34,8 +34,10 @@ const getUpdates = async (req, res) => {
     if (isActiveQuery) {
       const data = updates.map(item => ({
         _id: item._id,
+        title: item.title,
         text: item.title,
-        href: item.href || item.linkUrl || null,
+        slug: item.slug,
+        href: item.href || item.linkUrl || (item.slug ? `/notifications/${item.slug}` : '/notifications'),
         active: item.active !== false,
         expiresAt: item.expiresAt || null
       }));
@@ -93,6 +95,15 @@ const createUpdate = async (req, res) => {
     console.log('📥 Creating update request received');
     const body = { ...req.body };
     
+    // Parse SEO if sent as string (FormData)
+    if (typeof body.seo === 'string') {
+      try {
+        body.seo = JSON.parse(body.seo);
+      } catch (e) {
+        console.warn('Could not parse body.seo JSON string:', e.message);
+      }
+    }
+    
     // Validate required fields
     if (!body.title || !body.description || !body.type) {
       console.warn('❌ Missing required fields:', { title: !!body.title, description: !!body.description, type: !!body.type });
@@ -145,7 +156,7 @@ const createUpdate = async (req, res) => {
 
     // --- PING GOOGLE INSTANTLY ---
     try {
-      const updateUrl = `https://thesamarthacademy.in/updates/${update.slug}`;
+      const updateUrl = `https://thesamarthacademy.in/notifications/${update.slug}`;
       console.log('🔔 Notifying Google about:', updateUrl);
       await notifyGoogle(updateUrl, 'URL_UPDATED');
       console.log('✅ Google notification sent');
@@ -181,7 +192,7 @@ const deleteUpdate = async (req, res) => {
     
     if (deletedUpdate) {
         // --- PING GOOGLE INSTANTLY ---
-        const updateUrl = `https://thesamarthacademy.in/updates/${deletedUpdate.slug}`;
+        const updateUrl = `https://thesamarthacademy.in/notifications/${deletedUpdate.slug}`;
         await notifyGoogle(updateUrl, 'URL_DELETED');
         
         res.json({ message: 'Update removed' });
@@ -200,6 +211,15 @@ const updateUpdate = async (req, res) => {
     if (!update) return res.status(404).json({ message: 'Update not found' });
 
     const body = { ...req.body };
+
+    // Parse SEO if sent as string (FormData)
+    if (typeof body.seo === 'string') {
+      try {
+        body.seo = JSON.parse(body.seo);
+      } catch (e) {
+        console.warn('Could not parse body.seo JSON string:', e.message);
+      }
+    }
 
     // Ensure type matches one of the valid enum values (if being updated)
     if (body.type) {
@@ -246,7 +266,7 @@ const updateUpdate = async (req, res) => {
 
     // --- PING GOOGLE INSTANTLY ---
     try {
-      const updateUrl = `https://thesamarthacademy.in/updates/${update.slug}`;
+      const updateUrl = `https://thesamarthacademy.in/notifications/${update.slug}`;
       await notifyGoogle(updateUrl, 'URL_UPDATED');
     } catch (googleError) {
       console.warn("⚠️ Google indexing notification failed (non-critical):", googleError.message);

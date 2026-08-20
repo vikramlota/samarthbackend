@@ -50,13 +50,33 @@ const UpdateSchema = new mongoose.Schema({
   },
   href: { type: String },
   active: { type: Boolean, default: true },
-  expiresAt: { type: Date }
+  expiresAt: { type: Date },
+  seo: {
+    title: { type: String, maxLength: 200 },
+    description: { type: String, maxLength: 500 },
+    keywords: { type: String },
+    ogImage: { type: String },
+    canonicalUrl: { type: String },
+    noindex: { type: Boolean, default: false }
+  }
 },{ timestamps: true });
 
-// Pre-save hook to auto-generate slug if not provided
+// Pre-save hook to auto-generate slug and default SEO fields if not provided
 UpdateSchema.pre('save', async function() {
   if (this.title && !this.slug) {
     this.slug = generateSlug(this.title);
+  }
+
+  if (!this.seo) this.seo = {};
+  if (!this.seo.title && this.title) {
+    this.seo.title = this.title.substring(0, 70);
+  }
+  if (!this.seo.description && this.description) {
+    const plainText = this.description.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    this.seo.description = plainText.length > 160 ? plainText.substring(0, 157) + '...' : plainText;
+  }
+  if (!this.seo.ogImage && this.imageUrl) {
+    this.seo.ogImage = this.imageUrl;
   }
 });
 

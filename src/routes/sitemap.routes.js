@@ -4,6 +4,8 @@ const router = express.Router();
 const Course = require('../models/Course.model.js');
 const CurrentAffair = require('../models/CurrentAffair.model.js');
 const Update = require('../models/Update.model.js');
+const BlogPost = require('../models/BlogPost.model.js');
+
 // Helper function to stop Google from crashing on special characters
 const escapeXml = (unsafe) => {
     if (!unsafe) return '';
@@ -22,7 +24,8 @@ router.get('/sitemap.xml', async (req, res) => {
   try {
     const courses = await Course.find().select('slug updatedAt');
     const news = await CurrentAffair.find().select('slug updatedAt');
-    const notifications = await Update.find().select('slug updatedAt');
+    const notifications = await Update.find({ active: { $ne: false }, 'seo.noindex': { $ne: true } }).select('slug updatedAt');
+    const blogPosts = await BlogPost.find({ active: true, 'seo.noindex': { $ne: true } }).select('slug updatedAt publishedAt');
 
     const baseUrl = 'https://thesamarthacademy.in';
 
@@ -34,12 +37,12 @@ router.get('/sitemap.xml', async (req, res) => {
     xml += `  <url><loc>${baseUrl}/courses</loc><priority>0.8</priority></url>\n`;
     xml += `  <url><loc>${baseUrl}/current-affairs</loc><priority>0.8</priority></url>\n`;
     xml += `  <url><loc>${baseUrl}/notifications</loc><priority>0.8</priority></url>\n`;
+    xml += `  <url><loc>${baseUrl}/blog</loc><priority>0.8</priority></url>\n`;
 
     const safeDate = (date) => date ? date.toISOString() : new Date().toISOString();
 
     courses.forEach(course => {
       xml += `  <url>\n`;
-      // We wrap the slug in the escapeXml function!
       xml += `    <loc>${baseUrl}/courses/${escapeXml(course.slug)}</loc>\n`;
       xml += `    <lastmod>${safeDate(course.updatedAt)}</lastmod>\n`;
       xml += `    <priority>0.8</priority>\n`;
@@ -58,6 +61,14 @@ router.get('/sitemap.xml', async (req, res) => {
       xml += `  <url>\n`;
       xml += `    <loc>${baseUrl}/notifications/${escapeXml(notification.slug)}</loc>\n`;
       xml += `    <lastmod>${safeDate(notification.updatedAt)}</lastmod>\n`;
+      xml += `    <priority>0.7</priority>\n`;
+      xml += `  </url>\n`;
+    });
+
+    blogPosts.forEach(post => {
+      xml += `  <url>\n`;
+      xml += `    <loc>${baseUrl}/blog/${escapeXml(post.slug)}</loc>\n`;
+      xml += `    <lastmod>${safeDate(post.updatedAt || post.publishedAt)}</lastmod>\n`;
       xml += `    <priority>0.7</priority>\n`;
       xml += `  </url>\n`;
     });
