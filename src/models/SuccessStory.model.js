@@ -38,4 +38,4 @@ const SuccessStorySchema = new mongoose.Schema({
   publishedAt: { type: Date, default: Date.now }
 },{ timestamps: true });
 
-module.exports = mongoose.model('SuccessStory', SuccessStorySchema);
+module.exports = mongoose.model('SuccessStory', SuccessStorySchema, 'successstories');

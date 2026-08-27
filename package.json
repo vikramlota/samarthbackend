@@ -19,6 +19,7 @@
     "seed:categories:fresh": "node -r dotenv/config src/seed/categoriesSeed.js --clear",
     "seed:blog": "node -r dotenv/config src/seed/blogPostsSeed.js",
     "seed:blog:fresh": "node -r dotenv/config src/seed/blogPostsSeed.js --clear",
+    "seed:gndu-ucat": "node -r dotenv/config src/seed/gnduUcatSeed.js",
     "seed:admin-user": "node -r dotenv/config seed/userSeed.js"
   },
   "keywords": [],
