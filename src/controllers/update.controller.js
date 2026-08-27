@@ -79,10 +79,22 @@ const getUpdateById = async (req, res) => {
     if (!update) {
       return res.status(404).json({ message: 'Update not found', searchedParam: param });
     }
+
+    const updateObj = update.toObject();
+    if (!updateObj.seo) updateObj.seo = {};
+
+    // Auto-flag seo.noindex = true if posted date is older than 30 days (1 month)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const postedDate = new Date(update.datePosted || update.createdAt);
+    if (postedDate < thirtyDaysAgo) {
+      updateObj.seo.noindex = true;
+    }
+
     // Ensure image URL is HTTPS
     const sanitizedUpdate = {
-      ...update.toObject(),
-      imageUrl: update.imageUrl ? update.imageUrl.replace(/^http:/, 'https:') : update.imageUrl
+      ...updateObj,
+      imageUrl: updateObj.imageUrl ? updateObj.imageUrl.replace(/^http:/, 'https:') : updateObj.imageUrl
     };
     res.json(sanitizedUpdate);
   } catch (error) {

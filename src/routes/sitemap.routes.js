@@ -22,9 +22,20 @@ const escapeXml = (unsafe) => {
 
 router.get('/sitemap.xml', async (req, res) => {
   try {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
     const courses = await Course.find().select('slug updatedAt');
     const news = await CurrentAffair.find().select('slug updatedAt');
-    const notifications = await Update.find({ active: { $ne: false }, 'seo.noindex': { $ne: true } }).select('slug updatedAt');
+    // Only include active notifications posted within the last 30 days (1 month)
+    const notifications = await Update.find({
+      active: { $ne: false },
+      'seo.noindex': { $ne: true },
+      $or: [
+        { datePosted: { $gte: thirtyDaysAgo } },
+        { datePosted: { $exists: false }, createdAt: { $gte: thirtyDaysAgo } }
+      ]
+    }).select('slug updatedAt datePosted createdAt');
     const blogPosts = await BlogPost.find({ active: true, 'seo.noindex': { $ne: true } }).select('slug updatedAt publishedAt');
 
     const baseUrl = 'https://thesamarthacademy.in';
