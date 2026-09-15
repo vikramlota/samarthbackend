@@ -179,6 +179,7 @@ app.use('/api/media-coverage', cache, require('./routes/mediaCoverage.routes.js'
 app.use('/api/inquiries', require('./routes/inquiry.routes.js'));
 app.use('/api/blog/posts', cache, require('./routes/blogPosts.routes.js'));
 app.use('/api/blog/categories', cache, require('./routes/categories.routes.js'));
+app.use('/api/sample-notes', cache, require('./routes/sampleNote.routes.js'));
 // Global error handler - catches any unhandled errors
 app.use((err, req, res, next) => {
   console.error('🔴 ERROR:', err);
