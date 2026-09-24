@@ -5,6 +5,7 @@ const Course = require('../models/Course.model.js');
 const CurrentAffair = require('../models/CurrentAffair.model.js');
 const Update = require('../models/Update.model.js');
 const BlogPost = require('../models/BlogPost.model.js');
+const LandingPage = require('../models/LandingPage.model.js');
 
 // Helper function to stop Google from crashing on special characters
 const escapeXml = (unsafe) => {
@@ -37,6 +38,7 @@ router.get('/sitemap.xml', async (req, res) => {
       ]
     }).select('slug updatedAt datePosted createdAt');
     const blogPosts = await BlogPost.find({ active: true, 'seo.noindex': { $ne: true } }).select('slug updatedAt publishedAt');
+    const landingPages = await LandingPage.find({ active: true }).select('slug updatedAt');
 
     const baseUrl = 'https://thesamarthacademy.in';
 
@@ -81,6 +83,14 @@ router.get('/sitemap.xml', async (req, res) => {
       xml += `    <loc>${baseUrl}/blog/${escapeXml(post.slug)}</loc>\n`;
       xml += `    <lastmod>${safeDate(post.updatedAt || post.publishedAt)}</lastmod>\n`;
       xml += `    <priority>0.7</priority>\n`;
+      xml += `  </url>\n`;
+    });
+
+    landingPages.forEach(page => {
+      xml += `  <url>\n`;
+      xml += `    <loc>${baseUrl}/${escapeXml(page.slug)}</loc>\n`;
+      xml += `    <lastmod>${safeDate(page.updatedAt)}</lastmod>\n`;
+      xml += `    <priority>0.9</priority>\n`;
       xml += `  </url>\n`;
     });
 

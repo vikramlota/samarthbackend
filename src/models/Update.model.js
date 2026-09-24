@@ -49,6 +49,7 @@ const UpdateSchema = new mongoose.Schema({
     required: false
   },
   href: { type: String },
+  sampleNoteUrl: { type: String },
   active: { type: Boolean, default: true },
   expiresAt: { type: Date },
   seo: {

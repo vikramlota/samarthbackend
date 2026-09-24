@@ -34,6 +34,8 @@ const BlogPostSchema = new mongoose.Schema({
   coverImage: { type: String },
   coverImageAlt: { type: String },
 
+  sampleNoteUrl: { type: String },
+
   // Multi-category support
   categories: [{
     type: mongoose.Schema.Types.ObjectId,

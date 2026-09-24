@@ -101,6 +101,7 @@ const LandingPageSchema = new mongoose.Schema({
   faqs:          [FaqSchema],
   midCta:        { type: CtaSchema },
   finalCta:      { type: FinalCtaSchema },
+  sampleNoteUrl: { type: String },
 
   facultyTags: [{ type: String }],
 

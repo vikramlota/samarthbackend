@@ -158,6 +158,7 @@ app.post('/api/metrics/web-vital', (req, res) => {
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/upload', require('./routes/upload'));
 app.use('/api', sitemapRoutes);
+app.use('/', sitemapRoutes); // Expose /sitemap.xml at the root level for SEO
 app.use('/api/homepage', cache, homepageRoutes);
 
 app.use('/api/courses', cache, require('./routes/course.routes.js'));
