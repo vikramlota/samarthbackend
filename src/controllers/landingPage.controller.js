@@ -110,18 +110,14 @@ const adminUpdate = async (req, res) => {
   }
 };
 
-// DELETE /api/landing-pages/admin/:id  — soft delete
-const adminSoftDelete = async (req, res) => {
+// DELETE /api/landing-pages/admin/:id  — hard delete
+const adminHardDelete = async (req, res) => {
   try {
-    const page = await LandingPage.findByIdAndUpdate(
-      req.params.id,
-      { active: false, updatedBy: req.admin?._id },
-      { new: true }
-    );
+    const page = await LandingPage.findByIdAndDelete(req.params.id);
     if (!page) return res.status(404).json({ success: false, error: 'Not found' });
 
-    console.log(`🗑️  Admin deactivated landing page: ${page.slug} by ${req.admin?.username}`);
-    res.json({ success: true, data: page, message: 'Page deactivated' });
+    console.log(`🗑️  Admin deleted landing page: ${page.slug} by ${req.admin?.username}`);
+    res.json({ success: true, data: page, message: 'Page deleted successfully' });
   } catch (error) {
     console.error('Admin delete landing page error:', error.message);
     res.status(500).json({ success: false, error: 'Failed to delete page' });
@@ -162,6 +158,6 @@ module.exports = {
   adminGetById,
   adminCreate,
   adminUpdate,
-  adminSoftDelete,
+  adminHardDelete,
   adminDuplicate,
 };
